@@ -1,7 +1,7 @@
 var express = require('express')();
 var router = express;//express.Router();
 var mongoose = require('mongoose');
-var request = require('request');
+var requests = require('requests');
 var session = require('express-session');
 var passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy;
