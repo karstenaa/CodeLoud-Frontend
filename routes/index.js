@@ -15,10 +15,11 @@ express.use(session({secret: 'secretdude', saveUninitialized: true,
 express.use(passport.initialize());
 express.use(passport.session());
 
-passport.use(new LocalStrategy(function(username, password, done) {
-	console.log(username);
+passport.use(new LocalStrategy({
+    usernameField: 'uname',
+    passwordField: 'passwd'
+  },function(username, password, done) {
   	User.findOne({username : username, password : password},function(err, user){
-  		console.log("ASD");
   		if(user){
 			done(null, user);
 		}
@@ -26,7 +27,15 @@ passport.use(new LocalStrategy(function(username, password, done) {
 	    	done(null, false);
 	});
 }));
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+});
 
+passport.deserializeUser(function(id, done) {
+  User.findById(id, function(err, user) {
+    done(err, user);
+  });
+});
 // called in number 2 argument get
 // registration using another function without passport
 var authentication = function(req, res, done) 
@@ -43,6 +52,7 @@ var authentication = function(req, res, done)
   }
 }
 
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index');
@@ -56,7 +66,7 @@ router.get('/login' ,function(req, res, next) {
 });
 
 router.post('/authenticate',passport.authenticate('local', { successRedirect: '/dashboard',
-	failureRedirect: '/login' , failureFlash: true})
+	failureRedirect: '/login'})
 );
 router.post('/register', function(req,res){
 	var user = User({
