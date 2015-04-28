@@ -1,7 +1,7 @@
 var express = require('express')();
 var router = express;//express.Router();
 var mongoose = require('mongoose');
-
+var request = require('request');
 var session = require('express-session');
 var passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy;
@@ -69,6 +69,8 @@ router.post('/authenticate',passport.authenticate('local', { successRedirect: '/
 	failureRedirect: '/login'})
 );
 router.post('/register', function(req,res){
+	console.log(req.body);
+	console.dir(req.body);
 	var user = User({
 		firstname : req.body.fname,
 		lastname  : req.body.lname,
@@ -94,7 +96,24 @@ router.post('/node',function(req, res, next){
 						 
 					});
 });
-router.get('/dashboard',function(req,res,next){
+router.get('/dashboard',authentication,function(req,res,next){
 	res.render('dashboard');
-})
+});
+router.post('/rest/node',authentication,function(req,res){
+	console.log(req.body);
+	var node = Node({
+		name	: req.body.name,
+		cpu 	: req.body.cpu,
+  		ram 	: req.body.ram,
+  		status 	: false,
+  		url 	: req.body.url
+	});
+	node.save();
+	req.user.nodes.push(node);
+	req.user.save();
+	res.redirect('/dashboard');
+});
+router.get('/addrepo',authentication,function (req,res){
+	res.render('addrepo');
+});
 module.exports = router;
