@@ -418,3 +418,7 @@ label:before {
     pointer-events:none;
     display:block;
 }
+
+.w80{
+    width: 90%;
+}
