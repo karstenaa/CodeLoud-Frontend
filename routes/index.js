@@ -70,13 +70,14 @@ router.post('/authenticate',passport.authenticate('local', { successRedirect: '/
 );
 router.post('/register', function(req,res){
 	var user = User({
-		firstname : req.body.firstname,
-		lastname  : req.body.lastname,
+		firstname : req.body.fname,
+		lastname  : req.body.lname,
 		email     : req.body.email,
 		username  : req.body.username,
 		password  : req.body.password
 	});
 	user.save();
+	res.render('login');
 });
 router.post('/node',function(req,res){
 
@@ -85,7 +86,6 @@ router.post('/node',function(req,res){
 router.get('/register', function(req, res, next) {
   res.render('register', { title: 'Express' });
 });
-
 router.post('/node',function(req, res, next){
 	var node = Node({	cpu : req.body.cpu,
 						ram : req.body.ram,
