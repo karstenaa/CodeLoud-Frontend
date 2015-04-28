@@ -1,5 +1,5 @@
-var express = require('express');
-var router = express.Router();
+var express = require('express')();
+var router = express;//express.Router();
 var mongoose = require('mongoose');
 
 var session = require('express-session');
@@ -10,34 +10,21 @@ var User = require('../models/user');
 var Node = require('../models/node');
 var Usage = require('../models/usage');
 
-express.use(session{secret: "secretdude"});
+express.use(session({secret: 'secretdude', saveUninitialized: true,
+                 resave: true}));
 express.use(passport.initialize());
 express.use(passport.session());
 
 passport.use(new LocalStrategy(function(username, password, done) {
-  //fetch data here 
-  //fetch data code using mongo (rows means query result)
-  if(rows.length > 0) {
-    if(rows[0].password == password) 
-    {
-      done(null, {
-                    firstname: rows[0].firstname,
-                    lastname  : rows[0].lastname,
-                    email     : rows[0].email,
-                    username  : rows[0].username,
-                    password  : rows[0].password,
-                    nodes     : rows[0].nodes 
-                  });
-    }
-    else
-    {
-      done(null, false);
-    }
-  }
-  else
-  {
-    done(null, false);
-  }
+	console.log(username);
+  	User.findOne({username : username, password : password},function(err, user){
+  		console.log("ASD");
+  		if(user){
+			done(null, user);
+		}
+	  	else
+	    	done(null, false);
+	});
 }));
 
 // called in number 2 argument get
@@ -46,69 +33,58 @@ var authentication = function(req, res, done)
 {
   if(req.isAuthenticated())
   {
-    done();
+    //done();
+  	done();
   }
   else
   {
+  	res.redirect('/login');
     // redirect to error page ex -> res.redirect('error page');
   }
 }
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-  /*example mongoose
-  var user = User({
-  firstname : 'test',
-  lastname  : 'test',
-  email     : 'test',
-  username  : 'test',
-  password  : 'test'
-	});
-  user.save();*/
+  res.render('index');
+  
 });
 
 /* GET log in page */
-router.get('/login', authentication ,function(req, res, next) {
-  res.render('login', { title: 'Express' });
-  /*example mongoose
-  var user = User({
-  firstname : 'test',
-  lastname  : 'test',
-  email     : 'test',
-  username  : 'test',
-  password  : 'test'
-  });
-  user.save();*/
+router.get('/login' ,function(req, res, next) {
+  res.render('login');
+  
 });
 
+router.post('/authenticate',passport.authenticate('local', { successRedirect: '/dashboard',
+	failureRedirect: '/login' , failureFlash: true})
+);
+router.post('/register', function(req,res){
+	var user = User({
+		firstname : req.body.firstname,
+		lastname  : req.body.lastname,
+		email     : req.body.email,
+		username  : req.body.username,
+		password  : req.body.password
+	});
+	user.save();
+});
+router.post('/node',function(req,res){
+
+});
 /* GET register page */
 router.get('/register', function(req, res, next) {
   res.render('register', { title: 'Express' });
-  /*example mongoose
-  var user = User({
-  firstname : 'test',
-  lastname  : 'test',
-  email     : 'test',
-  username  : 'test',
-  password  : 'test'
-  });
-  user.save();*/
 });
 
-/*TESTING DASHBOARD <<gatau bener di taruh di mana>>*/ 
-/* GET Dashboard*/
-router.get('/dashboard', function(req, res, next) {
-  res.render('dashboard', { title: 'Express' });
-  /*example mongoose
-  var user = User({
-  firstname : 'test',
-  lastname  : 'test',
-  email     : 'test',
-  username  : 'test',
-  password  : 'test'
-  });
-  user.save();*/
+router.post('/node',function(req, res, next){
+	var node = Node({	cpu : req.body.cpu,
+						ram : req.body.ram,
+						url : req.body.url,
+						status : 0,
+						 
+					});
 });
-
+router.get('/dashboard',function(req,res,next){
+	res.render('dashboard');
+})
 module.exports = router;
