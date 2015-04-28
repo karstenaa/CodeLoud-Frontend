@@ -99,6 +99,8 @@ router.post('/node',function(req, res, next){
 router.get('/dashboard',authentication,function(req,res,next){
 	res.render('dashboard');
 });
+
+/* Send node data to server */
 router.post('/rest/node',authentication,function(req,res){
 	console.log(req.body);
 	var node = Node({
@@ -111,9 +113,72 @@ router.post('/rest/node',authentication,function(req,res){
 	node.save();
 	req.user.nodes.push(node);
 	req.user.save();
+
+	request({
+		// Change IP address to back-end defined IP
+		url: 'http://127.0.0.1:3000', //URL to hit
+		method: 'POST',
+		//Lets post the following key/values as form
+		json: node
+	}, function (error, response, body) {
+		if (error) {
+			console.log(error);
+		} else {
+			console.log(response.statusCode, body);
+		}
+	});
+
 	res.redirect('/dashboard');
 });
+
 router.get('/addrepo',authentication,function (req,res){
 	res.render('addrepo');
 });
+
+/* For run button on repo list page */
+router.get('/run', authentication, function(req, res){
+	console.log(req.body);
+	var node = Node({
+		name	: req.body.name,
+		cpu 	: req.body.cpu,
+		ram 	: req.body.ram,
+		status 	: false,
+		url 	: req.body.url
+	});
+	node.save();
+	req.user.nodes.push(node);
+	req.user.save();
+
+	request({
+		// Change IP address to back-end defined IP
+		url: 'http://127.0.0.1:3000/container' + node.name + '/output', //URL to hit
+		method: 'GET'
+	}, function (error, response, body) {
+		if (error) {
+			console.log(error);
+		} else {
+			console.log(response.statusCode, body); // This is the output, manipulate this.
+		}
+	});
+});
+
+/* On STDIN submit button */
+router.post('/input', authentication, function(req, res){
+	var stdin = req.body.stdin;
+	request({
+		// Change IP address to back-end defined IP
+		url: 'http://127.0.0.1:3000/container' + node.name + '/input', //URL to hit
+		method: 'POST',
+		json: {
+			'stdin': stdin
+		}
+	}, function (error, response, body) {
+		if (error) {
+			console.log(error);
+		} else {
+			console.log(response.statusCode, body);
+		}
+	});
+});
+
 module.exports = router;
