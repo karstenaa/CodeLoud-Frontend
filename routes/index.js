@@ -96,5 +96,19 @@ router.get('/register', function(req, res, next) {
   user.save();*/
 });
 
+/*TESTING DASHBOARD <<gatau bener di taruh di mana>>*/ 
+/* GET Dashboard*/
+router.get('/dashboard', function(req, res, next) {
+  res.render('dashboard', { title: 'Express' });
+  /*example mongoose
+  var user = User({
+  firstname : 'test',
+  lastname  : 'test',
+  email     : 'test',
+  username  : 'test',
+  password  : 'test'
+  });
+  user.save();*/
+});
 
 module.exports = router;
