@@ -9,7 +9,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/codeloud');
+mongoose.connect('mongodb://10.151.34.168:27017/CodeLoud');
 
 var app = express();
 // view engine setup
@@ -56,5 +56,5 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
-app.listen(3000);
+app.listen(3000, "10.151.34.159");
 module.exports = app;

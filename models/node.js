@@ -12,4 +12,4 @@ var NodeSchema = new mongoose.Schema({
   usages : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Usage' }]
 });
 
-module.exports = mongoose.model('Node', NodeSchema);
+module.exports = mongoose.model('Node', NodeSchema, 'Node');

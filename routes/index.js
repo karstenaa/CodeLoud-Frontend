@@ -1,7 +1,7 @@
 var express = require('express')();
 var router = express;//express.Router();
 var mongoose = require('mongoose');
-var requests = require('requests');
+var request = require('request');
 var session = require('express-session');
 var passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy;
@@ -92,43 +92,65 @@ router.post('/node',function(req, res, next){
 	var node = Node({	cpu : req.body.cpu,
 						ram : req.body.ram,
 						url : req.body.url,
-						status : 0,
+						status : 0
 						 
 					});
 });
 router.get('/dashboard',authentication,function(req,res,next){
-	res.render('dashboard');
+
+	User.findOne({username: req.user.username}, function (err, data) {
+
+		//var dataParse = JSON.parse(data.toString());
+		//var dataParse = Object.prototype.toString.apply(data);
+
+		Node.find({_id: { $in: data["nodes"]  } }, function (err, data2) {
+			//console.log("--repoRef--\n" + data["nodes"] + "\n--repoRef--\n");
+			//console.log("--repos--\n" + data2 + "\n--repos--\n");
+			res.render('dashboard', {data: data2});
+		})
+	})
 });
+
+/*
+router.post('/container', function(req, res) {
+	console.log("--this is json dude--\n" + JSON.stringify(req.body) + "\n--this is json dude--\n");
+	res.redirect('/dashboard');
+})
+*/
 
 /* Send node data to server */
 router.post('/rest/node',authentication,function(req,res){
 	console.log(req.body);
-	var node = Node({
-		user	: req.body.name,
+	var node = {
+		user	: req.user._id,
 		cpu 	: req.body.cpu,
   		ram 	: req.body.ram,
-  		status 	: false,
   		repo 	: req.body.url
-	});
-	node.save();
-	req.user.nodes.push(node);
-	req.user.save();
-
+	};
+	//node.save();
+	//req.user.nodes.push(node);
+	//req.user.save();	
+	//var saveResponse;
 	request({
 		// Change IP address to back-end defined IP
 		url: 'http://10.151.34.98/container', //URL to hit
+		//url: 'http://10.151.34.159:3000/container', //URL to hit
 		method: 'POST',
 		//Lets post the following key/values as form
-		json: node
+		json: true,
+		body: node
 	}, function (error, response, body) {
 		if (error) {
 			console.log(error);
 		} else {
 			console.log(response.statusCode, body);
+		   //var  saveResponse = body;
+		   console.log(body);
+		   res.redirect('/dashboard');
 		}
 	});
-
-	res.redirect('/dashboard');
+	//console.log(saveResponse);
+	//res.redirect('/dashboard');
 });
 
 router.get('/addrepo',authentication,function (req,res){
