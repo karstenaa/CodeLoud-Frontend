@@ -104,11 +104,11 @@ router.get('/dashboard',authentication,function(req,res,next){
 router.post('/rest/node',authentication,function(req,res){
 	console.log(req.body);
 	var node = Node({
-		name	: req.body.name,
+		user	: req.body.name,
 		cpu 	: req.body.cpu,
   		ram 	: req.body.ram,
   		status 	: false,
-  		url 	: req.body.url
+  		repo 	: req.body.url
 	});
 	node.save();
 	req.user.nodes.push(node);
@@ -116,7 +116,7 @@ router.post('/rest/node',authentication,function(req,res){
 
 	request({
 		// Change IP address to back-end defined IP
-		url: 'http://127.0.0.1:3000', //URL to hit
+		url: 'http://10.151.34.98/container', //URL to hit
 		method: 'POST',
 		//Lets post the following key/values as form
 		json: node
@@ -139,7 +139,7 @@ router.get('/addrepo',authentication,function (req,res){
 router.get('/run', authentication, function(req, res){
 	console.log(req.body);
 	var node = Node({
-		name	: req.body.name,
+		user	: req.body.name,
 		cpu 	: req.body.cpu,
 		ram 	: req.body.ram,
 		status 	: false,
@@ -151,7 +151,7 @@ router.get('/run', authentication, function(req, res){
 
 	request({
 		// Change IP address to back-end defined IP
-		url: 'http://127.0.0.1:3000/container' + node.name + '/output', //URL to hit
+		url: 'http://10.151.34.98/container/' + node.user + '/output', //URL to hit
 		method: 'GET'
 	}, function (error, response, body) {
 		if (error) {
@@ -167,7 +167,7 @@ router.post('/input', authentication, function(req, res){
 	var stdin = req.body.stdin;
 	request({
 		// Change IP address to back-end defined IP
-		url: 'http://127.0.0.1:3000/container' + node.name + '/input', //URL to hit
+		url: 'http://10.151.34.98/container/' + node.user + '/input', //URL to hit
 		method: 'POST',
 		json: {
 			'stdin': stdin
