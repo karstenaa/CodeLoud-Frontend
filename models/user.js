@@ -10,4 +10,4 @@ var UserSchema = new mongoose.Schema({
   nodes : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Node' }]
 });
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model('User', UserSchema, 'User');
