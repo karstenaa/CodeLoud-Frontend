@@ -14,7 +14,7 @@ mongoose.connect('mongodb://10.151.34.168:27017/CodeLoud');
 var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
@@ -56,5 +56,5 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
-app.listen(3000, "10.151.34.159");
+app.listen(3000, "10.151.43.120");
 module.exports = app;

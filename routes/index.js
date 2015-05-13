@@ -159,21 +159,12 @@ router.get('/addrepo',authentication,function (req,res){
 
 /* For run button on repo list page */
 router.get('/run', authentication, function(req, res){
-	console.log(req.body);
-	var node = Node({
-		user	: req.body.name,
-		cpu 	: req.body.cpu,
-		ram 	: req.body.ram,
-		status 	: false,
-		url 	: req.body.url
-	});
-	node.save();
-	req.user.nodes.push(node);
-	req.user.save();
+	// Get container id
+	var container_id = req.query.repo;
 
 	request({
 		// Change IP address to back-end defined IP
-		url: 'http://10.151.34.98/container/' + node.user + '/output', //URL to hit
+		url: 'http://10.151.34.98/container/' + container_id + '/output', //URL to hit
 		method: 'GET'
 	}, function (error, response, body) {
 		if (error) {
@@ -181,6 +172,7 @@ router.get('/run', authentication, function(req, res){
 		} else {
 			console.log(response.statusCode, body); // This is the output, manipulate this.
 		}
+		res.redirect('/dashboard');
 	});
 });
 
@@ -202,5 +194,6 @@ router.post('/input', authentication, function(req, res){
 		}
 	});
 });
+
 
 module.exports = router;
