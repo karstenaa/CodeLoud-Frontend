@@ -419,6 +419,11 @@ label:before {
     display:block;
 }
 
-.w80{
-    width: 90%;
+
+textarea{
+    resize: vertical;
+}
+
+textarea.form-control{
+    height: 140px;
 }
