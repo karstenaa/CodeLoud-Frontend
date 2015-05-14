@@ -371,9 +371,19 @@
                                         <p><%= "STDOUT: " + data[i]["stdout"]%></p>
                                         </div>
                                         <br>
+                                        <div id="stderr-area" style="display:none">
+                                        <p>
+                                            <i class="fa fa-close fa-fw"></i>
+                                            output (stdout)
+                                        </p>
+                                        <br>
+                                        <p><%= "STDERR: " + data[i]["stderr"]%></p>
+                                        </div>
+                                        <br>
                                         <div id="btn-wrapper">
                                         <button id="btnin" type="button" class="btn btn-default"><i class="fa fa-inbox fa-fw"></i>Enter Input (stdin)</button>
                                         <button id="btnout" type="button" class="btn btn-default"><i class="fa fa-gear fa-fw"></i>View Output (stdout)</button>
+                                        <button id="btnerr" type="button" class="btn btn-default"><i class="fa fa-gear fa-fw"></i>View Error (stderr)</button>
                                         <button type="submit" class="btn btn-success pull-right"> <i class="fa fa-gears fa-fw"></i>Run</button>
                                         </div>
                                     </form>
@@ -396,6 +406,10 @@
 
         $('#btnout').click(function(){
             $('#stdout-area').toggle();
+        });
+
+        $('#btnerr').click(function(){
+            $('#stderr-area').toggle();
         });
     </script>
 
