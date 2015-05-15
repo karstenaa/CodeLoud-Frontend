@@ -427,3 +427,9 @@ textarea{
 textarea.form-control{
     height: 140px;
 }
+
+.white{
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 5px;
+}

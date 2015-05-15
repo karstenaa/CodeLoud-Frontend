@@ -88,6 +88,7 @@ router.post('/node',function(req,res){
 router.get('/register', function(req, res, next) {
   res.render('register', { title: 'Express' });
 });
+
 router.post('/node',function(req, res, next){
 	var node = Node({	cpu : req.body.cpu,
 						ram : req.body.ram,
@@ -96,6 +97,7 @@ router.post('/node',function(req, res, next){
 						 
 					});
 });
+
 router.get('/dashboard',authentication,function(req,res,next){
 
 	User.findOne({username: req.user.username}, function (err, data) {
@@ -109,6 +111,10 @@ router.get('/dashboard',authentication,function(req,res,next){
 			res.render('dashboard', {data: data2});
 		})
 	})
+});
+
+router.get('/history', function(req, res, next) {
+  res.render('history', { title: 'Express' });
 });
 
 /*
@@ -153,7 +159,7 @@ router.post('/rest/node',authentication,function(req,res){
 	//res.redirect('/dashboard');
 });
 
-router.get('/addrepo',authentication,function (req,res){
+router.get('/add',authentication,function (req,res){
 	res.render('addrepo');
 });
 
