@@ -128,8 +128,8 @@ router.get('/dashboard',authentication,function(req,res,next){
 	//})
 });
 
-router.get('/history', function(req, res, next) {
-  res.render('history', { title: 'Express' });
+router.get('/history',authentication, function(req, res, next) {
+  res.render('history');
 });
 
 /*
@@ -174,16 +174,55 @@ router.post('/rest/node',authentication,function(req,res){
 	//res.redirect('/dashboard');
 });
 router.get('/rest/node/list',authentication,function(req,res){
-	Node.find({_id: { $in: req.user.nodes  } }, function (err, nodes) {
+	Node.find({_id: { $in: req.user.nodes  }, status: "false" }, function (err, nodes) {
 		//console.log("--repoRef--\n" + data["nodes"] + "\n--repoRef--\n");
 		//console.log("--repos--\n" + data2 + "\n--repos--\n");
 		console.log(nodes);
 		res.json(nodes);
 	})
 });
-router.get('/rest/node/output',authentication,function(req,res){
-	var data = {"wew" : "wew"};
-	res.json(data);
+router.get('/rest/node/history',authentication,function(req,res){
+	Node.find({_id: { $in: req.user.nodes  }, status: "true" }, function (err, nodes) {
+		//console.log("--repoRef--\n" + data["nodes"] + "\n--repoRef--\n");
+		//console.log("--repos--\n" + data2 + "\n--repos--\n");
+		console.log(nodes);
+		res.json(nodes);
+	})
+});
+router.get('/rest/node/output/:id',authentication,function(req,res){
+	request({
+		// Change IP address to back-end defined IP
+		url: backendIP + '/container/' + req.params.id + '/output', //URL to hit
+		method: 'GET'
+	}, function (error, response, body) {
+		if (error) {
+			console.log(error);
+			res.end();
+		} else {
+			res.json(body);
+			console.log(response.statusCode, body); // This is the output, manipulate this.
+		}
+	});
+});
+/* On STDIN submit button */
+router.post('/rest/node/input/:id', authentication, function(req, res){
+	var stdin = {stdin : req.body.stdin};
+	console.log("input" + stdin);
+	request({
+		// Change IP address to back-end defined IP
+		url: backendIP + '/container/' + req.params.id + '/input', //URL to hit
+		method: 'POST',
+		json: true,
+		body: stdin
+	}, function (error, response, body) {
+		if (error) {
+			console.log(error);
+			res.end();
+		} else {
+			res.end(body);
+			console.log(response.statusCode, body);
+		}
+	});
 });
 router.get('/add',authentication,function (req,res){
 	res.render('addrepo');
@@ -208,24 +247,7 @@ router.get('/run', authentication, function(req, res){
 	});
 });
 
-/* On STDIN submit button */
-router.post('/input', authentication, function(req, res){
-	var stdin = req.body.stdin;
-	request({
-		// Change IP address to back-end defined IP
-		url: backendIP + '/container' + node.user + '/input', //URL to hit
-		method: 'POST',
-		json: {
-			'stdin': stdin
-		}
-	}, function (error, response, body) {
-		if (error) {
-			console.log(error);
-		} else {
-			console.log(response.statusCode, body);
-		}
-	});
-});
+
 
 
 module.exports = router;

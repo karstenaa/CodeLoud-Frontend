@@ -85,13 +85,13 @@
                         </div>
                         <div ng-controller="node">
                             <div class="row" ng-hide="nodes.length">
-                                <h4>LOADING...</h4>
+                                <h4></h4>
                             </div>
                             <div class="row" ng-repeat="node in nodes">
                                 <div class="col-lg-12">
                                     <div class="panel panel-default">
                                         <div class="panel-heading">
-                                            <p>{{node.url}}</p>
+                                            <p style="word-wrap: break-word">{{node.url}}</p>
                                             <ul class="list-unstyled">
                                                 <li>
                                                     <div class="panel-heading">
@@ -104,37 +104,37 @@
                                                 </li>
                                             </ul>
                                             <form method="POST" action="{{'/run/' + node._id }}">
-                                                <div id="stdin-area" style="display:none">
-                                                    <p>
+                                                <div id="stdin-area" ng-show="isbtnin">
+                                                    <p >
                                                         <i class="fa fa-inbox fa-fw"></i>
                                                         enter input (stdin)
                                                     </p>
-                                                    <textarea class="form-control" type="text"></textarea>
+                                                    <textarea class="form-control" type="text" ng-model="node.stdin"></textarea>
+                                                    <button id="btnstdin" ng-click="input(node)" type="button" class="btn btn-default">Submit</button>
                                                 </div>
                                                 <br>
-                                                <div id="stdout-area" style="display:none">
+                                                <div id="stdout-area" ng-show="isbtnout" >
                                                     <p>
                                                         <i class="fa fa-gear fa-fw"></i>
                                                         output (stdout)
                                                     </p>
                                                     <br>
-                                                    <p class="white">STDOUT: {{node.stdout}}</p>
+                                                    <p style="word-wrap: break-word" class="white">STDOUT: {{node.stdout}}</p>
                                                 </div>
                                                 <br>
-                                                <div id="stderr-area" style="display:none">
+                                                <div id="stderr-area" ng-show="isbtnerr">
                                                     <p>
                                                         <i class="fa fa-close fa-fw"></i>
                                                         output (stdout)
                                                     </p>
                                                     <br>
-                                                    <p class="white">STDERR: {{node.stderr}}</p>
+                                                    <p style="word-wrap: break-word" class="white">STDERR: {{node.stderr}}</p>
                                                 </div>
                                                 <br>
                                                 <div id="btn-wrapper">
-                                                    <button id="btnin" type="button" class="btn btn-default"><i class="fa fa-inbox fa-fw"></i>Enter Input (stdin)</button>
-                                                    <button id="btnout" type="button" class="btn btn-default"><i class="fa fa-gear fa-fw"></i>View Output (stdout)</button>
-                                                    <button id="btnerr" type="button" class="btn btn-default"><i class="fa fa-gear fa-fw"></i>View Error (stderr)</button>
-                                                    <button type="submit" class="btn btn-success pull-right"> <i class="fa fa-gears fa-fw"></i>Run</button>
+                                                    <button id="btnin" ng-click="isbtnin=!isbtnin" type="button" class="btn btn-default"><i class="fa fa-inbox fa-fw"></i>Enter Input (stdin)</button>
+                                                    <button id="btnout" ng-click="isbtnout=!isbtnout" type="button" class="btn btn-default"><i class="fa fa-gear fa-fw"></i>View Output (stdout)</button>
+                                                    <button id="btnerr" ng-click="isbtnerr=!isbtnerr" type="button" class="btn btn-default"><i class="fa fa-gear fa-fw"></i>View Error (stderr)</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -149,19 +149,7 @@
     </div>  <!-- end page-wrapper -->
 </div>    <!--end wrapper-->
 
-    <script type="text/javascript">
-        $('#btnin').click(function(){
-            $('#stdin-area').toggle();
-        });
-
-        $('#btnout').click(function(){
-            $('#stdout-area').toggle();
-        });
-
-        $('#btnerr').click(function(){
-            $('#stderr-area').toggle();
-        });
-    </script>
+   
 
 </body>
 

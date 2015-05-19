@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="history">
 
 <head>
 
@@ -27,7 +27,7 @@
     <!-- Angular -->
     <script src="js/angular.min.js"></script>
     <script src="js/play_stop.js"></script>
-
+    <script src="js/angular/history.js"></script>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -65,40 +65,64 @@
                 	<h1 class="page-header">Process History</h1>
                 	</div>
             	</div>
-                <% for(var i = 0; i < data.length; i++) { %>
-                <div class="row">
-                        <div class="col-lg-12">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <p>Nama</p>
-                                        <div id="stdout-area" style="display:none">
-                                        <p>
-                                            <i class="fa fa-gear fa-fw"></i>
-                                            output (stdout)
-                                        </p>
-                                        <br>
-                                        <p class="white"><%= "STDOUT: " + data[i]["stdout"]%></p>
+                <div ng-controller="node">
+                            <div class="row" ng-hide="nodes.length">
+                                <h4></h4>
+                            </div>
+                            <div class="row" ng-repeat="node in nodes">
+                                <div class="col-lg-12">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <p style="word-wrap: break-word">{{node.url}}</p>
+                                            <ul class="list-unstyled">
+                                                <li>
+                                                    <div class="panel-heading">
+                                                        <div class="la-ball-beat la-dark">
+                                                            <div></div>
+                                                            <div></div>
+                                                            <div></div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                            <form method="POST" action="{{'/run/' + node._id }}">
+                                                <div id="stdin-area" ng-show="isbtnin">
+                                                    <p >
+                                                        <i class="fa fa-inbox fa-fw"></i>
+                                                        input (stdin)
+                                                    </p>
+                                                    <p style="word-wrap: break-word" class="white">STDIN: {{node.stdin}}</p>
+                                                </div>
+                                                <br>
+                                                <div id="stdout-area" ng-show="isbtnout" >
+                                                    <p>
+                                                        <i class="fa fa-gear fa-fw"></i>
+                                                        output (stdout)
+                                                    </p>
+                                                    <br>
+                                                    <p style="word-wrap: break-word" class="white">STDOUT: {{node.stdout}}</p>
+                                                </div>
+                                                <br>
+                                                <div id="stderr-area" ng-show="isbtnerr">
+                                                    <p>
+                                                        <i class="fa fa-close fa-fw"></i>
+                                                        output (stdout)
+                                                    </p>
+                                                    <br>
+                                                    <p style="word-wrap: break-word" class="white">STDERR: {{node.stderr}}</p>
+                                                </div>
+                                                <br>
+                                                <div id="btn-wrapper">
+                                                    <button id="btnin" ng-click="isbtnin=!isbtnin" type="button" class="btn btn-default"><i class="fa fa-inbox fa-fw"></i>View Input (stdin)</button>
+                                                    <button id="btnout" ng-click="isbtnout=!isbtnout" type="button" class="btn btn-default"><i class="fa fa-gear fa-fw"></i>View Output (stdout)</button>
+                                                    <button id="btnerr" ng-click="isbtnerr=!isbtnerr" type="button" class="btn btn-default"><i class="fa fa-gear fa-fw"></i>View Error (stderr)</button>
+                                                </div>
+                                            </form>
                                         </div>
-                                        <br>
-                                        <div id="stderr-area" style="display:none">
-                                        <p>
-                                            <i class="fa fa-close fa-fw"></i>
-                                            output (stdout)
-                                        </p>
-                                        <br>
-                                        <p class="white"><%= "STDERR: " + data[i]["stderr"]%></p>
-                                        </div>
-                                        <br>
-                                        <div id="btn-wrapper">
-                                        <button id="btnout" type="button" class="btn btn-default"><i class="fa fa-gear fa-fw"></i>View Output (stdout)</button>
-                                        <button id="btnerr" type="button" class="btn btn-default"><i class="fa fa-gear fa-fw"></i>View Error (stderr)</button>
-                                        <button type="submit" class="btn btn-success pull-right"> <i class="fa fa-gears fa-fw"></i>Run</button>
-                                        </div>
+                                     </div>
                                 </div>
-                             </div>
                             </div>
                         </div>
-                        <% } %>
         	</div> <!--end ng-view-->
        </div>  <!-- end page-wrapper -->
     </div>    <!--end wrapper-->
