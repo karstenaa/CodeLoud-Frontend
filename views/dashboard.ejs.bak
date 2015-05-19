@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="dashboard">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Codeloud - Run and Done</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Timeline CSS -->
+    <link href="css/timeline.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/sb-admin-2.css" rel="stylesheet">
+    <link href="css/ball-beat.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="css/jquery.selectbox.css" type="text/css" rel="stylesheet" />
+
+    <!-- Angular -->
+    <script src="js/angular.min.js"></script>
+    <script src="js/play_stop.js"></script>
+    <script src="js/angular/dashboard.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="js/sb-admin-2.js"></script>    
+</head>
+
+<body ng-app="Repository">
+
+<div ng-view>
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+            <% include partials/dashboardheader %>
+            <!-- /.navbar-static-side -->
+        </nav>
+
+        <!-- page-wrapper -->
+        <div id="page-wrapper">
+        	<div ng-view>
+            	<div class="row">
+                    <div class="col-lg-12">
+                        <h1 class="page-header">Process</h1>
+                         
+
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        Add Process
+                                        <div class="pull-right">
+                                            <div class="btn-group">
+                                                <a class="btn btn-default btn-xs"  href="add">
+                                                 <i class="fa fa-plus"></i> Add
+                                                </a>
+                        					</div>
+                                    </div>
+                                 </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div ng-controller="node">
+                            <!-- <% for(var i = 0; i < data.length; i++) { %>
+                                <div class="row" >
+                                    <div class="col-lg-12">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <p><%= data[i]["url"]%></p>
+                                                <ul class="list-unstyled">
+                                                    <li>
+                                                        <div class="panel-heading">
+                                                            <div class="la-ball-beat la-dark">
+                                                                <div></div>
+                                                                <div></div>
+                                                                <div></div>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                                <form method="POST" action="/run?repo=<%=data[i]["_id"]%>">
+                                                    <div id="stdin-area" style="display:none">
+                                                        <p>
+                                                            <i class="fa fa-inbox fa-fw"></i>
+                                                            enter input (stdin)
+                                                        </p>
+                                                        <textarea class="form-control" type="text"></textarea>
+                                                    </div>
+                                                    <br>
+                                                    <div id="stdout-area" style="display:none">
+                                                        <p>
+                                                            <i class="fa fa-gear fa-fw"></i>
+                                                            output (stdout)
+                                                        </p>
+                                                        <br>
+                                                        <p class="white"><%= "STDOUT: " + data[i]["stdout"]%></p>
+                                                    </div>
+                                                    <br>
+                                                    <div id="stderr-area" style="display:none">
+                                                        <p>
+                                                            <i class="fa fa-close fa-fw"></i>
+                                                            output (stdout)
+                                                        </p>
+                                                        <br>
+                                                        <p class="white"><%= "STDERR: " + data[i]["stderr"]%></p>
+                                                    </div>
+                                                    <br>
+                                                    <div id="btn-wrapper">
+                                                        <button id="btnin" type="button" class="btn btn-default"><i class="fa fa-inbox fa-fw"></i>Enter Input (stdin)</button>
+                                                        <button id="btnout" type="button" class="btn btn-default"><i class="fa fa-gear fa-fw"></i>View Output (stdout)</button>
+                                                        <button id="btnerr" type="button" class="btn btn-default"><i class="fa fa-gear fa-fw"></i>View Error (stderr)</button>
+                                                        <button type="submit" class="btn btn-success pull-right"> <i class="fa fa-gears fa-fw"></i>Run</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                         </div>
+                                    </div>
+                                </div>
+                            <% } %> -->
+                        </div>
+                    </div>  
+                </div>
+            </div>     
+        </div> <!--end ng-view-->
+    </div>  <!-- end page-wrapper -->
+</div>    <!--end wrapper-->
+
+    <script type="text/javascript">
+        $('#btnin').click(function(){
+            $('#stdin-area').toggle();
+        });
+
+        $('#btnout').click(function(){
+            $('#stdout-area').toggle();
+        });
+
+        $('#btnerr').click(function(){
+            $('#stderr-area').toggle();
+        });
+    </script>
+
+</body>
+
+</html>

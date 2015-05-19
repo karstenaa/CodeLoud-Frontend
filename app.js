@@ -9,7 +9,9 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://10.151.34.168:27017/CodeLoud');
+var frontendIP = "10.151.43.36";
+var dbIP = "10.151.34.181";
+mongoose.connect('mongodb://'+ dbIP +':27017/CodeLoud');
 
 var app = express();
 // view engine setup
@@ -56,5 +58,5 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
-app.listen(3000, "10.151.43.120");
+app.listen(3000);
 module.exports = app;

@@ -10,10 +10,14 @@ var User = require('../models/user');
 var Node = require('../models/node');
 var Usage = require('../models/usage');
 
+var backendIP = "http://10.151.34.98";
+
 express.use(session({secret: 'secretdude', saveUninitialized: true,
                  resave: true}));
 express.use(passport.initialize());
 express.use(passport.session());
+
+
 
 passport.use(new LocalStrategy({
     usernameField: 'uname',
@@ -100,17 +104,23 @@ router.post('/node',function(req, res, next){
 
 router.get('/dashboard',authentication,function(req,res,next){
 
-	User.findOne({username: req.user.username}, function (err, data) {
-
-		//var dataParse = JSON.parse(data.toString());
-		//var dataParse = Object.prototype.toString.apply(data);
-
-		Node.find({_id: { $in: data["nodes"]  } }, function (err, data2) {
-			//console.log("--repoRef--\n" + data["nodes"] + "\n--repoRef--\n");
-			//console.log("--repos--\n" + data2 + "\n--repos--\n");
-			res.render('dashboard', {data: data2});
-		})
-	})
+	//var dataParse = JSON.parse(data.toString());
+	//var dataParse = Object.prototype.toString.apply(data);
+	//req.user.populate('nodes').exec();
+	// req.user.populate('nodes').exec(function (err, person) {
+	// 	  if (err) return handleError(err);
+	// 	  //console.log(person);
+	// 	  console.dir(person);
+	// });
+	
+	
+	// console.log(req.user);
+	res.render('dashboard');
+	//Node.find({_id: { $in: req.user.nodes  } }, function (err, nodes) {
+		//console.log("--repoRef--\n" + data["nodes"] + "\n--repoRef--\n");
+		//console.log("--repos--\n" + data2 + "\n--repos--\n");
+		//res.render('dashboard', { 'data': nodes});
+	//})
 });
 
 router.get('/history', function(req, res, next) {
@@ -139,7 +149,7 @@ router.post('/rest/node',authentication,function(req,res){
 	//var saveResponse;
 	request({
 		// Change IP address to back-end defined IP
-		url: 'http://10.151.34.98/container', //URL to hit
+		url: backendIP + '/container', //URL to hit
 		//url: 'http://10.151.34.159:3000/container', //URL to hit
 		method: 'POST',
 		//Lets post the following key/values as form
@@ -158,7 +168,18 @@ router.post('/rest/node',authentication,function(req,res){
 	//console.log(saveResponse);
 	//res.redirect('/dashboard');
 });
-
+router.get('/rest/node/list',authentication,function(req,res){
+	Node.find({_id: { $in: req.user.nodes  } }, function (err, nodes) {
+		//console.log("--repoRef--\n" + data["nodes"] + "\n--repoRef--\n");
+		//console.log("--repos--\n" + data2 + "\n--repos--\n");
+		console.log(nodes);
+		res.json(nodes);
+	})
+});
+router.get('/rest/node/output',authentication,function(req,res){
+	var data = {"wew" : "wew"};
+	res.json(data);
+});
 router.get('/add',authentication,function (req,res){
 	res.render('addrepo');
 });
@@ -170,7 +191,7 @@ router.get('/run', authentication, function(req, res){
 
 	request({
 		// Change IP address to back-end defined IP
-		url: 'http://10.151.34.98/container/' + container_id + '/output', //URL to hit
+		url: backendIP + '/container' + container_id + '/output', //URL to hit
 		method: 'GET'
 	}, function (error, response, body) {
 		if (error) {
@@ -187,7 +208,7 @@ router.post('/input', authentication, function(req, res){
 	var stdin = req.body.stdin;
 	request({
 		// Change IP address to back-end defined IP
-		url: 'http://10.151.34.98/container/' + node.user + '/input', //URL to hit
+		url: backendIP + '/container' + node.user + '/input', //URL to hit
 		method: 'POST',
 		json: {
 			'stdin': stdin
