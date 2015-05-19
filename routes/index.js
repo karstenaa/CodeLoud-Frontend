@@ -54,8 +54,13 @@ var authentication = function(req, res, done)
   	res.redirect('/login');
     // redirect to error page ex -> res.redirect('error page');
   }
-}
+};
 
+/* logout */
+router.get('/logout', function(req, res){
+	req.logout();
+	res.redirect('/');
+});
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
