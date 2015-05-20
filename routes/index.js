@@ -56,6 +56,10 @@ var authentication = function(req, res, done)
   }
 };
 
+router.get('/documentation', function(req, res){
+	res.redirect('http://www.docdroid.net/file/download/10v09/userguide.pdf');
+});
+
 /* logout */
 router.get('/logout', function(req, res){
 	req.logout();
