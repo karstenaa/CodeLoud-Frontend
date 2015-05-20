@@ -25,7 +25,7 @@ app.controller('node', function($scope,$http,$timeout) {
 	    angular.forEach($scope.nodes, function(node, key) {
 			$http.get('/rest/node/output/' + node._id)
 		      .success(function(data, status, headers, config) {
-		      //console.log(data);
+		      console.log(data);
 		      var result = JSON.parse(data);
 		      // Your code here
 		      console.log(result.stdout);

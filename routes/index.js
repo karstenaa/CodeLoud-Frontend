@@ -97,11 +97,15 @@ router.post('/node',function(req,res){
 router.get('/register', function(req, res, next) {
   res.render('register', { title: 'Express' });
 });
-
+router.get('/balance' ,function(req, res, next) {
+  res.render('balance');
+  
+});
 router.post('/node',function(req, res, next){
 	var node = Node({	cpu : req.body.cpu,
 						ram : req.body.ram,
 						url : req.body.url,
+						name : req.body.name,
 						status : 0
 						 
 					});
@@ -146,7 +150,8 @@ router.post('/rest/node',authentication,function(req,res){
 		user	: req.user._id,
 		cpu 	: req.body.cpu,
   		ram 	: req.body.ram,
-  		repo 	: req.body.url
+  		repo 	: req.body.url,
+  		//name	: req.body.name
 	};
 	//node.save();
 	//req.user.nodes.push(node);
@@ -206,7 +211,8 @@ router.get('/rest/node/output/:id',authentication,function(req,res){
 });
 /* On STDIN submit button */
 router.post('/rest/node/input/:id', authentication, function(req, res){
-	var stdin = {stdin : req.body.stdin};
+	console.log(req.body);
+	var stdin = { stdin : req.body.stdin};
 	console.log("input" + stdin);
 	request({
 		// Change IP address to back-end defined IP
