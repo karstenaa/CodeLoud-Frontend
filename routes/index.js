@@ -9,6 +9,7 @@ var passport = require('passport'),
 var User = require('../models/user');
 var Node = require('../models/node');
 var Usage = require('../models/usage');
+var Balance = require('../models/balance'); //Add balance.js here
 
 var backendIP = "http://10.151.34.98";
 
@@ -101,10 +102,52 @@ router.post('/node',function(req,res){
 router.get('/register', function(req, res, next) {
   res.render('register', { title: 'Express' });
 });
-router.get('/balance' ,function(req, res, next) {
+
+/* PLEASE CHECK HERE + models/balance.js */
+router.get('/balance', authentication, function(req, res, next) {
   res.render('balance');
-  
 });
+
+//Note : use REST as you like, and change in balance.ejs in form action, in example using REST /pay here
+router.post('/pay', authentication, function(req, res, next) {
+
+	Balance.findOne({username : req.user.username}, function(err, data) {
+		if(!data)
+		{
+			var payment = Balance( {username: req.user.username, balance: req.body.nominal, last_payment: new Date()} );
+			payment.save();
+		}
+		else
+		{
+			var current = data.balance;
+
+			var condition = {username: req.user.username}, 
+				update = { balance: req.body.nominal + current, last_payment : new Date() }, 
+				options = { multi: true };
+
+			Balance.update(condition, update, options, callback);
+		}
+
+		res.redirect('/current_balance');
+	})
+})
+
+router.get('/current_balance', authentication, function(req, res, next) {
+  
+  Balance.findOne({username : req.user.username}, function(err, balance_data) {
+  	if(!balance_data)
+  	{
+  		res.render('current_balance');
+  	}
+  	else
+  	{
+  		res.render('current_balance', {data: balance_data});
+  	}
+  })
+});
+
+/* UNTIL HERE */
+
 router.post('/node',function(req, res, next){
 	var node = Node({	cpu : req.body.cpu,
 						ram : req.body.ram,
@@ -138,6 +181,11 @@ router.get('/dashboard',authentication,function(req,res,next){
 
 router.get('/history',authentication, function(req, res, next) {
   res.render('history');
+	Node.find({_id: { $in: data["nodes"]  } }, function (err, data2) {
+		//console.log("--repoRef--\n" + data["nodes"] + "\n--repoRef--\n");
+		console.log("--repos--\n" + data2[0] + "\n--repos--\n");
+		res.render('dashboard', {data: data2});
+	})
 });
 
 /*
@@ -182,6 +230,7 @@ router.post('/rest/node',authentication,function(req,res){
 	//console.log(saveResponse);
 	//res.redirect('/dashboard');
 });
+
 router.get('/rest/node/list',authentication,function(req,res){
 	Node.find({_id: { $in: req.user.nodes  }, status: "false" }, function (err, nodes) {
 		//console.log("--repoRef--\n" + data["nodes"] + "\n--repoRef--\n");
@@ -213,6 +262,7 @@ router.get('/rest/node/output/:id',authentication,function(req,res){
 		}
 	});
 });
+
 /* On STDIN submit button */
 router.post('/rest/node/input/:id', authentication, function(req, res){
 	console.log(req.body);
@@ -234,6 +284,7 @@ router.post('/rest/node/input/:id', authentication, function(req, res){
 		}
 	});
 });
+
 router.get('/add',authentication,function (req,res){
 	res.render('addrepo');
 });
@@ -256,8 +307,5 @@ router.get('/run', authentication, function(req, res){
 		res.redirect('/dashboard');
 	});
 });
-
-
-
 
 module.exports = router;
