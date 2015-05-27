@@ -104,7 +104,7 @@ router.get('/register', function(req, res, next) {
 });
 
 /* PLEASE CHECK HERE + models/balance.js */
-router.get('/balance', authentication, function(req, res, next) {
+router.get('/charge', authentication, function(req, res, next) {
   res.render('balance');
 });
 
@@ -128,11 +128,11 @@ router.post('/pay', authentication, function(req, res, next) {
 			Balance.update(condition, update, options, callback);
 		}
 
-		res.redirect('/current_balance');
+		res.redirect('/balance');
 	})
 })
 
-router.get('/current_balance', authentication, function(req, res, next) {
+router.get('/balance', authentication, function(req, res, next) {
   
   Balance.findOne({username : req.user.username}, function(err, balance_data) {
   	if(!balance_data)
@@ -198,11 +198,13 @@ router.post('/container', function(req, res) {
 /* Send node data to server */
 router.post('/rest/node',authentication,function(req,res){
 	console.log(req.body);
+	var today = new.Date();
 	var node = {
 		user	: req.user._id,
 		cpu 	: req.body.cpu,
   		ram 	: req.body.ram,
-  		repo 	: req.body.url,
+  		repo 	: req.body.url
+  		//date 	: 
   		//name	: req.body.name
 	};
 	//node.save();

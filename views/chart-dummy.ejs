@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="dashboard">
 
 <head>
 
@@ -19,6 +19,7 @@
 
     <!-- Custom CSS -->
     <link href="css/sb-admin-2.css" rel="stylesheet">
+    <link href="css/ball-beat.css" rel="stylesheet">
 
     <!-- Custom Fonts -->
     <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -27,6 +28,10 @@
     <!-- Angular -->
     <script src="js/angular.min.js"></script>
     <script src="js/play_stop.js"></script>
+    <script src="js/angular/dashboard.js"></script>
+
+    <!--Morris Chart-->
+    <link href="morrisjs/morris.css" rel="stylesheet">    
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -43,10 +48,14 @@
     <script src="js/bootstrap.min.js"></script>
 
     <!-- Custom Theme JavaScript -->
-    <script src="js/sb-admin-2.js"></script>  
+    <script src="js/sb-admin-2.js"></script>    
+
+    <!--Morris Javascript-->
+    <script src="js/raphael-min.js"></script>
+    <script src="morrisjs/morris.min.js"></script>
 </head>
 
-<body ng-app="Billing">
+<body ng-app="Repository">
 
 <div ng-view>
     <div id="wrapper">
@@ -54,36 +63,54 @@
         <!-- Navigation -->
         <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
             <% include partials/dashboardheader %>
+            <!-- /.navbar-static-side -->
         </nav>
 
         <!-- page-wrapper -->
         <div id="page-wrapper">
         	<div ng-view>
-            	<div class="row">
+                <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">Billing Settings</h1>
-                    <div class="panel-heading">
-                        <h3>PayPal Payment</h3>
-                        <p>
-                        Make a one time PayPal payment. It may take up to 5 minutes for the payment to process.
-                        </p>
-                        <form>
-                            <div class="form-group">
-                                <select name="nominal" class="form-control" style="width:50%; float:left;">
-                                    <option value="50">Rp 50.000,-</option>
-                                    <option value="100">Rp 100.000,-</option>
-                                    <option value="125">Rp 125.000,-</option>
-                                    <option value="200">Rp 200.000,-</option>
-                                </select>
-                                <button class="btn btn-default" type="submit" style="margin-left:20px;float:left">Submit</button>
-                            </div>
-                        </form>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Core Usage
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div id="morris-area-chart"></div>
+                        </div>
                     </div>
-                </div>     
-        	</div> <!--end ng-view-->
-       </div>  <!-- end page-wrapper -->
-    </div>    <!--end wrapper-->
+                </div>
+                </div>
+            </div> <!--end ng-view-->
+    </div>  <!-- end page-wrapper -->
+</div>    <!--end wrapper-->
+
+   
 
 </body>
+
+<script type="text/javascript">
+$(function() {
+
+    Morris.Area({
+        
+        element: 'morris-area-chart',
+        data: [{
+            period: '2010 Q1',
+            cpu: 2666
+        }, {
+            period: '2010 Q2',
+            cpu: 2778
+        }],
+        xkey: 'period',
+        ykeys: ['cpu'],
+        labels: ['Core Usage'],
+        pointSize: 2,
+        hideHover: 'auto',
+        resize: true
+    });
+});
+</script>
 
 </html>
